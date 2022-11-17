@@ -1,0 +1,222 @@
+<section class="content">
+  <div class="container-fluid">
+    <div class="row my-3 mx-1">
+      <!--Member Card-->
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-body ">
+            <h5 class=" font-weight-bold text-secondary ">Member</h5>
+            <h3 class="card-text text-primary">
+              <% if (!Members.error) { %>
+                <%= Members.length %>
+              <% } else { %>
+                <span>0</span>  
+              <% } %>
+            </h3>
+            <a href="/admin/members" class="stretched-link">
+              <i class="fa-solid fa-arrow-right" ></i>
+              <span class="ml-1">Details</span>
+            </a>
+            <!--Member icon-->
+            <div class=" position-absolute d-flex justify-content-center  bg-primary rounded-circle"
+              style="width: 56px; height:56px; top:20px; right:20px">
+              <i class="fa-solid fa-user-group fa-lg my-auto "></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end Member Card-->
+      <!--Category Card-->
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-body ">
+            <h5 class=" font-weight-bold text-secondary ">Category</h5>
+            <h3 class="card-text text-primary">
+              <% if (!Categories.error) { %>
+                <%= Categories.length %>
+              <% } else { %>
+                <span>0</span>  
+              <% } %>
+            </h3>
+            <a href="/admin/categories" class="stretched-link">
+              <i class="fa-solid fa-arrow-right"></i>
+              <span class="ml-1">Details</span>
+            </a>
+            <!--Category icon-->
+            <div class=" position-absolute d-flex justify-content-center bg-primary rounded-circle "
+              style="width: 56px; height:56px; top:20px; right:20px">
+              <i class="fa-solid fa-tags fa-lg my-auto "></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end Category Card-->
+      <!--Product Card-->
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+          <div class="card-body ">
+            <h5 class=" font-weight-bold text-secondary ">Products</h5>
+            <h3 class="card-text text-primary">
+              <% if (!Products.error) { %>
+                <%= Products.length %>
+              <% } else { %>
+                <span>0</span>  
+              <% } %>
+            </h3>
+            <a href="/admin/products" class="stretched-link">
+              <i class="fa-solid fa-arrow-right"></i>
+              <span class="ml-1">Details</span>
+            </a>
+            <!--Product icon-->
+            <div class=" position-absolute d-flex justify-content-center  bg-primary rounded-circle "
+              style="width: 56px; height:56px; top:20px; right:20px">
+              <i class="fa-solid fa-basket-shopping fa-lg my-auto "></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end Product Card-->
+      <!--Transaction Card-->
+      <div class="col-md-12">
+        <div class="card shadow-sm">
+          <div class="card-body ">
+            <h5 class=" font-weight-bold text-secondary">Income</h5>
+            <h3 class="card-text text-primary">
+              Rp. 
+              <% if (!detailTransaction.error) { %>
+                <% let totalTransactions = 0 %> 
+                <% detailTransaction.forEach(transaction => { %>
+                  <% if (transaction.status == "Success" || transaction.status == "Returned") { %>
+                    <% totalTransactions+=transaction.total %> 
+                  <% } %>
+                <% }) %>
+                <%= numberToCurrency(totalTransactions)  %> 
+              <% } else { %>
+                <span>0</span>  
+              <% } %>
+            </h3>
+            <a href="/admin/transactions " class="stretched-link">
+              <i class="fa-solid fa-arrow-right"></i>
+              <span class="ml-1">Details</span>
+            </a>
+            <!--Transaction icon-->
+            <div class=" position-absolute d-flex justify-content-center  bg-primary rounded-circle "
+              style="width: 56px; height:56px; top:20px; right:20px">
+              <i class="fa-solid fa-money-bill-transfer fa-lg my-auto"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--end Transaction card-->
+      <div class="col-12 my-3">
+        <h3>Sales</h3>
+      </div>
+      <% let count = 0 %> 
+      <% if (!Categories.error) { %>
+        <% Categories.forEach(category => { %>
+          <!--Categorie list Card-->
+         <div class="col-md-6 col-lg-3">
+           <div class="card shadow-sm">
+             <div class="card-body ">
+               <h5 class=" font-weight-bold text-secondary ">
+                 <% if (category.name.length < 14 ) { %>
+                   <%= category.name %>
+                   <span> Sold</span>
+                 <% } else { %>
+                   <%= category.name.substring(0,13) %>
+                   <span>...</span>
+                 <% } %>
+               </h5>
+               <h3 class="card-text">
+               <% count = 0 %>
+               <% if (!detailTransaction.error) { %>
+                <% detailTransaction.forEach(transaction => { %>
+                  <% transaction.detail_transactions.forEach(detail => { %>
+                    <% if (detail.product && detail.product.id_category == category.id_category) { %>
+                      <% count+=detail.amount %> 
+                    <% } %> 
+                  <% }) %>
+                <% }) %>
+               <% } %> 
+               
+               <%= count %> 
+               </h3>
+               <a href="/admin/categories" class="text-success stretched-link">
+                 <i class="fa-solid fa-arrow-right"></i>
+                 <span class="ml-1">Details</span>
+               </a>
+               <!--Dollar icon-->
+               <div class=" position-absolute d-flex justify-content-center  bg-success rounded-circle "
+                 style="width: 56px; height:56px; top:20px; right:20px">
+                 <i class="fa-solid fa-dollar-sign fa-lg my-auto "></i>
+               </div>
+             </div>
+           </div>
+         </div>
+         <!--Categorie list Card-->
+         <% }) %>
+      <% } %>
+      
+    </div>
+
+    <div class="card card-dark m-3">
+      <div class="card-header d-flex justify-content-center">
+        <h5 class=" my-auto mr-auto">Sales Chart</h4>
+        
+        <div class="card-tools my-auto">
+          <!-- This will cause the card to collapse when clicked -->
+          <form action="/admin" method="GET" name="month" class="d-inline">
+            <% console.log(month) %> 
+            <input type="month" class="rounded border-0" id="selectMonth" name="month" onfocus="this.showPicker()" onchange="submit()" value=<%= month %> >
+          </form>
+          <button type="button" class="btn btn-tool"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+        </div>
+        <!-- /.card-tools -->
+      </div>
+
+      <!-- /.card-header -->
+      <div class="card-body">
+        <canvas id="myChart" style="max-height: 400px;"></canvas>
+      </div>
+      <!-- /.card-body -->
+
+    </div>
+    <!-- /.card -->
+  </div>
+</section>
+
+
+
+<!--Chart Custom-->
+<script>
+  const ctx = document.getElementById('myChart').getContext('2d');
+
+  ProductSold = <%- ProductSold %>
+  console.log(Object.keys(ProductSold));
+  console.log(Object.values(ProductSold));
+  const myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: Object.keys(ProductSold),
+      datasets: [{
+        label: '# Jumlah transaksi produk yang telah terjual',
+        data: Object.values(ProductSold),
+        backgroundColor: [
+          'rgba(99, 255, 132, 0.2)'
+        ],
+        borderColor: [
+          'rgba(99, 255, 132, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>

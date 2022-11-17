@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%- include('./admin/head'); %>
+  </head>
+
+  <body>
+    <div class="fixed-top bg-transparent" style="height: 100vh; background-image: linear-gradient(to top, rgba(30, 0, 255, 0.2), rgba(52, 186, 235, 0.2)); z-index: 0"></div>
+    <div class="fixed-top bg-transparent" style="height: 100vh; background-image: linear-gradient(to left, rgba(0, 255, 166, 0.2), rgba(255, 52, 208, 0.2)); z-index: 0"></div>
+    <% if(messages) {%>
+    <div class="d-flex bg-white rounded-lg p-1 my-2 border border-danger position-absolute pl-3" style="right: 24px; top: 16px" id="toast">
+      <div class="my-auto text-danger text-bold"><%= messages%></div>
+
+      <button class="btn ml-auto" onclick="closeToast()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <% } %>
+    <div class="d-flex my-auto justify-content-center align-items-center p-3 p-sm-0" style="height: 100vh; background-image: url('images/bg_banyumala.webp'); background-size: cover; background-position: center">
+      <div class="card col-12 col-sm-6 col-md-5 m-3 p-3 rounded-lg">
+        <form action="/register" method="POST" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control mb-3" name="name" id="name" placeholder="" required />
+            <div class="flex row">
+              <div class="col-6">
+                <label for="username">Username</label>
+                <input type="text" class="form-control mb-3" name="username" id="username" placeholder="username to use when login" required />
+              </div>
+              <div class="col-6">
+                <label for="password">Password</label>
+                <input type="password" class="form-control mb-3" name="password" id="password" placeholder="Input password to use when login" required />
+              </div>
+            </div>
+            <label for="">Gender</label>
+            <div class="flex row mb-3 px-2">
+              <div class="form-check form-check-inline col-2">
+                <input class="form-check-input" type="radio" name="gender" id="male" value="1" />
+                <label class="form-check-label" for="male">Male</label>
+              </div>
+              <div class="form-check form-check-inline ml-3 col-2">
+                <input class="form-check-input" type="radio" name="gender" id="female" value="0" />
+                <label class="form-check-label" for="female">Female</label>
+              </div>
+            </div>
+            <label for="address">Address</label>
+            <input type="text" class="form-control mb-3" name="address" id="address" placeholder="" />
+
+            <div class="flex row">
+              <div class="col-6">
+                <label for="phone">Phone</label>
+                <input type="tel" class="form-control mb-3" name="phone" id="phone" placeholder="" />
+              </div>
+              <div class="col-6">
+                <label for="inputImage">Input Profile</label>
+                <input type="file" accept="image/*" name="profileImg" class="form-control-file" id="inputImage" />
+              </div>
+            </div>
+            <div class="flex row">
+              <div class="col-6">
+                <a href="/login" class="btn btn-outline-dark w-100">Login</a>
+              </div>
+              <div class="col-6">
+                <button type="submit" class="btn btn-dark w-100">Register</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      function closeToast() {
+        document.getElementById("toast").classList.remove("d-flex");
+        document.getElementById("toast").classList.add("d-none");
+      }
+    </script>
+  </body>
+</html>

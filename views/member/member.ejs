@@ -1,0 +1,259 @@
+<section class="content">
+  <div class="container-fluid">
+
+      <div class="row my-2 mx-1">
+          <% if (!Products.error) { %>
+              <% Products.forEach(product=> { %>
+                  <div class="col-md-6 col-lg-4 d-flex align-items-stretch">
+                      <div class="card text-left p-3">
+                          <div class="card-title d-flex">
+                              <%= product.name %> 
+                              <% if (product.stock == 0) { %>
+                                  <span class="badge badge-secondary p-1 ml-auto" >Rp. <%=numberToCurrency(product.price)%> </span>
+                                  <span class="badge badge-secondary p-1 ml-2" >Stock <%= product.stock %> </span>
+                              <% } else { %>
+                                  <span class="badge badge-success p-1 ml-auto" >Rp. <%=numberToCurrency(product.price)%> </span>
+                                  <span class="badge badge-success p-1 ml-2" >Stock <%= product.stock %> </span>
+                              <% } %>
+                              
+                          </div>
+                          <div class="card-body d-flex align-items-center">
+                              <div>
+                                  <img class="card-img-top my-auto" data-toggle="modal"
+                                      data-target="#photo<%= product.id_product %>"
+                                      src="/admin/img/<%=product.photo%>">
+                              </div>
+                          </div>
+                          <div class="row justify-content-between px-3">
+                              <% if (product.stock == 0) { %>
+                                  <button name="" id="" class="btn btn-outline-primary col-8" data-toggle="modal"
+                                  data-target="#detail<%= product.id_product %>" role="button">
+                                  Details
+                                  </button>
+                                  <button name="" id="" class="btn btn-secondary col-3" disabled href="#" role="button"
+                                      data-toggle="modal" data-target="#cart<%= product.id_product %>">
+                                      <i class="fa-solid fa-cart-shopping mx-1"></i>
+                                  </button>
+                              <% } else { %>
+                                  <a name="" id="" class="btn btn-outline-primary col-8" data-toggle="modal"
+                                  data-target="#detail<%= product.id_product %>" role="button">
+                                  Details
+                                  </a>
+                                  <a name="" id="" class="btn btn-primary col-3" href="#" role="button"
+                                      data-toggle="modal" data-target="#cart<%= product.id_product %>">
+                                      <i class="fa-solid fa-cart-shopping mx-1"></i>
+                                  </a>
+                              <% } %>
+                              
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Modal photo -->
+                  <div class="modal fade" id="photo<%= product.id_product %>" tabindex="-1" role="dialog"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">
+                                      <%=product.name%> Image
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                              <div class="modal-body d-flex justify-content-center flex-sm-row flex-column">
+                                  <div>
+                                      <img class="card-img-top my-auto" src="/admin/img/<%=product.photo%>">
+                                  </div>
+                              </div>
+                              <div class="modal-footer">
+                                  <% if (product.stock == 0) { %>
+                                      <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                      <button name="" id="" class="btn btn-secondary col-3" disabled href="#" role="button"
+                                          data-toggle="modal" data-target="#cart<%= product.id_product %>">
+                                          <i class="fa-solid fa-cart-shopping mx-1"></i>
+                                      </button>
+                                  <% } else { %>
+                                      <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                      <a name="" id="" class="btn btn-primary col-3" href="#" role="button"
+                                          data-toggle="modal" data-target="#cart<%= product.id_product %>">
+                                          <i class="fa-solid fa-cart-shopping mx-1"></i>
+                                      </a>
+                                  <% } %>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Modal detail -->
+                  <div class="modal fade" id="detail<%= product.id_product %>" tabindex="-1" role="dialog"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">
+                                      <%=product.name%>
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                              <div class="modal-body d-flex  flex-sm-row flex-column">
+                                  <%= product.description %>
+                              </div>
+                              <div class="modal-footer">
+                                  <% if (product.stock == 0) { %>
+                                      <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                      <button name="" id="" class="btn btn-secondary col-3" disabled href="#" role="button"
+                                          data-toggle="modal" data-target="#cart<%= product.id_product %>">
+                                          <i class="fa-solid fa-cart-shopping mx-1"></i>
+                                      </button>
+                                  <% } else { %>
+                                      <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                      <a name="" id="" class="btn btn-primary col-3" href="#" role="button"
+                                          data-toggle="modal" data-target="#cart<%= product.id_product %>">
+                                          <i class="fa-solid fa-cart-shopping mx-1"></i>
+                                      </a>
+                                  <% } %>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <!-- Modal Cart -->
+                  <div class="modal fade" id="cart<%= product.id_product %>" tabindex="-1" role="dialog"
+                      aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                              <div class="modal-header">
+                                  <h5 class="modal-title col" id="exampleModalLabel">Add <%=product.name%>
+                                       to Cart <span class="badge badge-primary p-1 ml-2" >In Stock: <%= product.stock %></span>
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                  </button>
+                              </div>
+                              <form action="/member/cart/<%= Members.id_user %>"  method="POST">
+                                  <div class="modal-body d-flex justify-content-center flex-column">
+                                      <h5 class="text-center my-3">Quantity</h5>
+                                      <div class="input-group mb-3 w-50 w-sm-25 mx-auto">
+                                          <div class="input-group-prepend">
+                                              <button class="btn btn-outline-secondary" onclick="substract(<%= product.id_product %>)"
+                                                  type="button" id="button-addon1">
+                                                  <i class="fa fa-minus" aria-hidden="true"></i>
+                                              </button>
+                                          </div>
+                                          <input type="hidden" name="id_user" value="<%= Members.id_user %>" >
+                                          <input type="hidden" name="id_product" value="<%= product.id_product %>" >
+                                          <input type="number" id="quantity<%= product.id_product %>" name="amount"
+                                              class="form-control border-secondary text-center bg-white "
+                                              placeholder="0" aria-label="Example text with button addon"
+                                              aria-describedby="button-addon1" value="1" max="<%= product.stock %>" min="1" onkeydown="return false" >
+                                          <div class="input-group-append">
+                                              <button class="btn btn-outline-secondary" onclick="add(<%= product.id_product %>)" type="button"
+                                                  id="button-addon1">
+                                                  <i class="fa fa-plus" aria-hidden="true"></i>
+                                              </button>
+                                          </div>
+                                      </div>
+                                      <h5 class="my-3 text-center">Booking For: <span id="days<%= product.id_product %>">1</span> Days</h5>
+                                      <div class="row mb-3">
+                                          <div class="col-6 justify-content-center">
+                                              <label for="start_date mx-auto">From</label>
+                                              <input type="date" name="start_date" class="form-control"  onchange="updateBookingDay(<%= product.id_product %>)" id="start_date<%= product.id_product %>" required>
+                                          </div>
+                                          <div class="col-6">
+                                              <label for="end_date">To</label>
+                                              <input type="date" name="end_date" class="form-control" onchange="updateBookingDay(<%= product.id_product %>)" id="end_date<%= product.id_product %>"required>
+                                              <script>
+                                                  console.log(new Date().toISOString().split("T")[0])
+                                                  minDate = new Date(new Date().toLocaleString("en-US", {timeZone:"Asia/Makassar"}))
+                                                  minDate.setDate(minDate.getDate()+2)
+                                                  minDate.setTime(minDate.getTime()+8*60 * 60 * 1000)
+                                                  document.getElementById("start_date"+<%= product.id_product %>).min = minDate.toISOString().split("T")[0]
+                                                  document.getElementById("start_date"+<%= product.id_product %>).value = minDate.toISOString().split("T")[0]   
+                                                  document.getElementById("end_date"+<%= product.id_product %>).min = minDate.toISOString().split("T")[0]
+                                                  document.getElementById("end_date"+<%= product.id_product %>).value = minDate.toISOString().split("T")[0] 
+                                              </script>
+                                          </div>
+                                      </div>
+                                      <ul class="list-group my-3">
+                                          <li class="list-group-item">
+                                              Note 1: Reservations must be made at least 2 days before booking starts
+                                          </li>
+                                          
+                                          <li class="list-group-item active d-flex justify-content-between">
+                                              <div>Sub-Total:</div>
+                                              <p id="price<%= product.id_product %>" hidden> <%= product.price %>  </p>
+                                              <div>Rp. <span id="subTotal<%= product.id_product %>"><%=numberToCurrency(product.price)%> </span></div>
+                                          </li>
+                                      </ul>
+                                  </div>
+                                  <div class="modal-footer">
+                                      <button type="button" class="btn btn-outline-primary"
+                                          data-dismiss="modal">Close</button>
+
+                                      <button type="submit" class="btn btn-primary">Add to Cart</button>
+
+                                  </div>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+                  <% }) %>
+                      <% } %>
+
+      </div>
+
+
+  </div>
+
+</section>
+<script src="/javascripts/numberToCurrency.js"></script>
+<script>
+  let day
+  function updateBookingDay(id){
+      const startDate = new Date($("#start_date"+id).val())
+      const x = document.getElementById("end_date"+id).min = $("#start_date"+id).val()
+      let endDate = new Date($("#end_date"+id).val())
+      
+      if(!isNaN(startDate) && !isNaN(endDate) ){
+          if(startDate>endDate){
+              endDate = startDate 
+              $("#end_date"+id).val($("#start_date"+id).val())
+          }
+          day = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) +1
+          $('#days'+id).text(day) 
+          let value = $("#quantity"+id).val()
+          let price = $("#price"+id).text()
+          subTotal = value * price * day
+          $('#subTotal'+id).text(numberToCurrency(subTotal))
+      }
+      
+  }
+  function add(id) {
+      let value = $("#quantity"+id).val()
+      let price = $("#price"+id).text()
+      if(value< Number($("#quantity"+id).attr('max'))){
+          value++
+      }
+      $("#quantity"+id).val(value)
+      subTotal = value * price
+      if(day > 1){
+          subTotal = subTotal * day
+      }
+      $('#subTotal'+id).text(numberToCurrency(subTotal))
+  }
+  function substract(id) {
+      let value = $("#quantity"+id).val()
+      let price = $("#price"+id).text()
+
+      if (value > 1) {
+          value--
+      }
+      $("#quantity"+id).val(value)
+      subTotal = value * price
+      if(day > 1){
+          subTotal = subTotal * day
+      }
+      $('#subTotal'+id).text(numberToCurrency(subTotal))
+  }
+</script>

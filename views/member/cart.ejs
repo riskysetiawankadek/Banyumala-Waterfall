@@ -1,0 +1,387 @@
+<script src="/javascripts/numberToCurrency.js"></script>
+<script>
+    let note
+    function updateBookingDay(id){
+        const startDate = new Date($("#start_date"+id).val())
+        const x = document.getElementById("end_date"+id).min = $("#start_date"+id).val()
+        const endDate = new Date($("#end_date"+id).val())
+        if(!isNaN(startDate) && !isNaN(endDate) ){
+            day = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) +1
+            $('#days'+id).text(day) 
+            let value = $("#quantity"+id).val()
+            let price = $("#price"+id).text()
+            totalPrice = value * price * day
+            $('#subTotal'+id).text(numberToCurrency(totalPrice))
+        }
+    }
+</script>
+<div class="d-flex align-items-stretch m-3">
+    <div class=" w-100 text-left p-3">
+        <% if (msg) { %>
+            <div class="alert alert-success alert-dismissible fade text-center m-3" role="alert" id="msgInfo">
+                <strong><%= msg %> </strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <% } %>
+        
+        
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive ">
+                    <table class="table table-striped text-center " id="dt_category">
+                        <thead>
+                            <tr>
+                                <th scope="col" style="min-height: 96px;">Photo</th>
+                                <th scope="col" style="min-width: 144px;" class="col">Product Name</th>
+                                <th scope="col" style="min-width: 104px;">Price</th>
+                                <th scope="col" style="min-width: 104px;">Stock</th>
+                                <th scope="col" style="min-width: 180px;" class="col">Quantity</th>
+                                <th scope="col" style="min-width: 130px;" class="col">Booking Start</th>
+                                <th scope="col" style="min-width: 130px;" class="col">Booking End</th>
+                                <th scope="col" style="min-width: 60px;">Days</th>
+                                <th scope="col" style="min-width: 80px;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% let totalItems = 0 %>
+                            <% let totalPrice = 0 %> 
+                            <% let endDate %>
+                            <% let startDate %>  
+                            <% if (!Cart.error) { %>
+                                <% Cart.forEach(userCart => { %>
+                                    
+                                    <% userCart.carts.forEach(cart => { %>
+                                        <% totalItems += cart.amount %> 
+                                        <% startDate = new Date(cart.start_date) %> 
+                                        <% endDate = new Date(cart.end_date) %> 
+                                        <% day = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) +1 %> 
+                                        <% totalPrice += (cart.product.price*cart.amount*day) %>
+                                        <tr>
+                                            <td scope="row" class="align-middle">
+                                                <img src="/admin/img/<%= cart.product.photo %>" style="max-width: 96px;" alt="">
+                                            </td>
+                                            <td class="align-middle"><%= cart.product.name %> </td>
+                                            <p id="price<%= cart.id_cart %>" hidden><%= cart.product.price %> </p>
+                                            <td class="align-middle"><%= numberToCurrency(cart.product.price) %></td>
+                                            <td class="align-middle"><%= cart.product.stock %> </td>
+                                            <td class="align-middle">
+                                                <div class="input-group w-sm-25 mx-auto">
+                                                    <div class="input-group-prepend">
+                                                        <button class="btn btn-outline-secondary" onclick="substract('<%= cart.id_cart %>', '<%= cart.id_product %>')"
+                                                            type="button" id="button-addon1">
+                                                            <i class="fa fa-minus" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                    <input type="number" id="quantity<%= cart.id_cart %>" name="amount"
+                                                        class="form-control border-secondary text-center bg-white " placeholder="0"
+                                                        aria-label="Example text with button addon" aria-describedby="button-addon1"
+                                                        value="<%= cart.amount %>" max="<%= cart.product.stock %>" min="1" onkeydown="return false" readonly>
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-outline-secondary" onclick="add('<%= cart.id_cart %>', '<%= cart.id_product %>')"
+                                                            type="button" id="button-addon1">
+                                                            <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <input type="date" name="start_date" id="start_date<%= cart.id_cart %>"  class="form-control" onchange="updateBookingDay(<%= cart.id_cart %>,<%= cart.id_product %>)" value="<%= cart.start_date %>">
+                                            </td>
+                                            <td class="align-middle">
+                                                <input type="date" name="end_date" id="end_date<%= cart.id_cart %>" class="form-control" onchange="updateBookingDay(<%= cart.id_cart %>,<%= cart.id_product %>)" value="<%= cart.end_date %>">
+                                            </td>
+                                            <td class="align-middle" id="day<%= cart.id_cart %>"><%= day %> </td>
+                                            <td class="align-middle">
+                                                <button type="submit" name="" id="" class="btn btn-danger btn-sm px-3 mx-1"
+                                                    data-toggle="modal" data-target="#delete<%= cart.id_cart %>">
+                                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                                </button>
+                                            </td>
+                                            <script>
+                                                console.log(new Date().toISOString().split("T")[0])
+                                                minDate = new Date()
+                                                console.log(minDate)
+                                                minDate.setDate(minDate.getDate()+2)
+                                                console.log(minDate)
+                                                minDate.setUTCHours(23-8,59,59,999)
+                                                currentDate = new Date(document.getElementById("start_date"+<%= cart.id_cart %>).value)
+                                                console.log(currentDate)
+                                                console.log(minDate)
+                                                document.getElementById("start_date"+<%= cart.id_cart %>).min = minDate.toISOString().split("T")[0]
+                                                document.getElementById("end_date"+<%= cart.id_cart %>).min = minDate.toISOString().split("T")[0]
+                                                
+                                                if(currentDate< minDate){
+                                                    if(currentDate.getDate() != minDate.getDate()){
+                                                        document.getElementById("start_date"+<%= cart.id_cart %>).value = minDate.toISOString().split("T")[0]
+                                                        let startDate = new Date($("#start_date"+<%= cart.id_cart %>).val())
+                                                        let endDate = new Date($("#end_date"+<%= cart.id_cart %>).val())
+                                                        if(startDate>=endDate){
+                                                            document.getElementById("end_date"+<%= cart.id_cart %>).value = minDate.toISOString().split("T")[0]
+                                                            endDate = new Date($("#end_date"+<%= cart.id_cart %>).val())
+                                                        }
+                                                        day = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) +1
+                                                        $('#day'+<%= cart.id_cart %>).text(day) 
+                                                        note = "We changed some of your order booking day because it have exceeded the time limit for ordering. reservations can only be made at least 2 days in advance."    
+                                                    }
+                                                }
+                                            </script>
+                                        </tr>
+                                        <!-- Modal Delete -->
+                                        <div class="modal fade" id="delete<%= cart.id_cart %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Confirmation</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Are you sure you want to delete <%= cart.product.name %>?
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-outline-dark" data-dismiss="modal">Close</button>
+                                                    <form action="/member/delete_cart/<%= user.id_user %>/<%= cart.id_cart %>?_method=DELETE" method="POST" class="d-inline">
+                                                        <input type="hidden" name="id_user" value="<%= userCart.id_user %>" >
+                                                        <button type="submit" class="btn btn-dark">Delete Product</button>
+                                                    </form>
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <% }) %>
+                                    
+                                <% }) %>
+                            <% } %>
+                            
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="alert alert-warning alert-dismissible fade text-center m-3" role="alert" id="msgInfo2">
+            <strong id="noteText"></strong>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <script>
+            if(note){
+                console.log(note)
+                $('#msgInfo2').fadeIn(1500,function() { $(this).addClass("show"); });
+                $('#noteText').text(note);
+            }
+        </script>
+        <div class="card col-12 col-md-5 col-lg-4 p-3">
+            <div class="card-header">Summary</div>
+            <div class="card-body d-flex">
+                <div class="col-7">
+                    <p>Items</p>
+                    <p>Total</p>
+                </div>
+                <div class="col-1">
+                    <p>:</p>
+                    <p>:</p>
+                </div>
+                <div class="col-4">
+                    <p id="totalItems"><%= totalItems %></p>
+                    <p hidden id="totalPrice"><%= totalPrice %></p>
+                    <p id="totalPriceText">Rp. <%= numberToCurrency(totalPrice) %></p>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary" data-toggle="modal"
+                data-target="#addPayment">Checkout</button>
+        </div>
+        <!--Modal to Input Payment-->
+        <div class="modal fade" id="addPayment" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Confirm Payment</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <% if (!Cart.error) { %>
+                        <% Cart.forEach(userCart => { %>
+                            <form action="/member/payment/<%= userCart.id_user %>"  method="POST" enctype="multipart/form-data">
+
+                            <div class="modal-body">
+                                <table class="table p-5">
+                                    <tr>
+                                        <th style="min-width: 120px;">Product</th>
+                                        <th style="min-width: 80px;">Price</th>
+                                        <th>Qty</th>
+                                        <th>Days</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                    
+                                    <% userCart.carts.forEach(cart => { %>
+                                        <tr>
+                                            <td><%= cart.product.name %> </td>
+                                            <td id="checkPrice<%= cart.id_cart %>">Rp. <%= numberToCurrency(cart.product.price) %></td>
+                                            <td id="checkQty<%= cart.id_cart %>"><%= cart.amount %></td> 
+                                            <td><span id="days<%= cart.id_cart %>"></span></td>
+                                            <td>Rp. <span id="subTotal<%= cart.id_cart %>"><%=numberToCurrency( cart.amount * cart.product.price) %></span></td>
+                                            <script>updateBookingDay(<%= cart.id_cart %> )</script>
+                                        </tr>
+                                    <% }) %>
+                    
+                                </table>
+                                <ul class="list-group my-3">
+                                    <li class="list-group-item active d-flex justify-content-between">
+                                        <div>Total</div>
+                                        <div id="grandTotal"><script>$('#grandTotal').text('Rp '+numberToCurrency($('#totalPrice').text()))</script></div>
+                                    </li>
+                                </ul>
+                                <p>please transfer to account: <strong>BCA 1233457</strong>
+                                    and upload the transfer receipt below</p>
+                                <li class="list-group-item my-3">
+                                    Note: Payments that have been made are <strong>non-refundable</strong>
+                                </li>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                    <span class="input-group-text">Upload</span>
+                                    </div>
+                                    <div class="custom-file">
+                                    <input type="file" name="payment" required class="custom-file-input" id="inputGroupFile02" required>
+                                    <label class="custom-file-label" for="inputGroupFile02">Transfer Receipt</label>
+                                    </div>
+                                    <input type="hidden" name="start_date" id="start_date">
+                                    <input type="hidden" name="end_date" id="end_date">
+                                    <input type="hidden" name="id_user" id="id_user" value="<%= userCart.id_user %>">
+                                    <input type="hidden" name="total" id="total" value="<%= totalPrice %>" >
+                                    <input type="hidden" name="status" id="status" value="Pending">
+                                    <input type="hidden" name="productAmount" id="productAmount">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                
+                            </div>
+                            </form>    
+                        <% }) %>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <!--End Modal-->
+    </div>
+</div>
+<script>
+    $('#inputGroupFile02').on('change',function(){
+        //get the file name
+        var fileName = $(this).val();
+        //replace the "Choose a file" label
+        var cleanFileName = fileName.replace('C:\\fakepath\\', " ");
+        $(this).next('.custom-file-label').html(cleanFileName);
+    })
+</script>
+<% if (!Cart.error) { %>
+    <% console.log(Cart[0].carts) %>
+    <% let detail = JSON.stringify(Cart[0].carts) %>  
+    <script>let detailTransaksi = <%- detail %></script>
+<% } %>
+
+<script>
+    $(document).ready(function () {
+        setTimeout(OpenMsg, 500);
+        function OpenMsg(){
+            $('#msgInfo').fadeIn(1500,function() { $(this).addClass("show"); }); 
+        }
+        
+        detailTransaksi.forEach(detail => {
+            detailTransaction[detail.id_product] = detail.amount
+            start_date[detail.id_product]=$('#start_date'+detail.id_cart).val()
+            end_date[detail.id_product]=$('#end_date'+detail.id_cart).val()
+        })
+        $('#productAmount').val(JSON.stringify(detailTransaction))
+        $('#start_date').val(JSON.stringify(start_date))
+        console.log(start_date)
+        $('#end_date').val(JSON.stringify(end_date))
+    })
+</script>
+<script>
+    let detailTransaction = {}
+    let start_date = {}
+    let end_date = {}
+    let day
+    let totalPrice 
+    function updateBookingDay(id, id_product){
+        const startDate = new Date($("#start_date"+id).val())
+        //const y = document.getElementById("start_date"+id).min = new Date()
+        console.log(new Date())
+        const x = document.getElementById("end_date"+id).min = $("#start_date"+id).val()
+        console.log(x)
+        let endDate = new Date($("#end_date"+id).val())
+        if(!isNaN(startDate) && !isNaN(endDate) ){
+            if(startDate>endDate){
+                endDate = startDate 
+                $("#end_date"+id).val($("#start_date"+id).val())
+            }
+            totalPrice = Number($('#totalPrice').text())
+            let dayBefore = $('#days'+id).text()
+            day = (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24) +1
+            $('#days'+id).text(day) 
+            $('#day'+id).text(day) 
+            let updateDay = day - dayBefore
+            let value = $("#quantity"+id).val()
+            let price = $("#price"+id).text()
+            let subTotal = value * price * day
+            $('#subTotal'+id).text(numberToCurrency(value*price*day))
+            totalPrice += (value * price * updateDay)
+            updateTotalText(totalPrice)
+            start_date[id_product] = $("#start_date"+id).val()
+            end_date[id_product] = $("#end_date"+id).val()
+            $('#start_date').val(JSON.stringify(start_date))
+            $('#end_date').val(JSON.stringify(end_date))
+        }
+    }
+    function updateTotalText(totalPrice){
+        $('#totalPrice').text(totalPrice)
+        $('#totalPriceText').text("Rp "+ numberToCurrency(totalPrice))
+        $('#total').val(totalPrice)
+        $('#grandTotal').text("Rp "+ numberToCurrency(totalPrice))
+    }
+    function updateTotal(price, qty, days){
+        totalPrice = Number($('#totalPrice').text())
+        let totalItems = Number($('#totalItems').text())
+        
+        totalItems += qty
+        totalPrice += (price * days )
+        console.log(totalPrice)
+        updateTotalText(totalPrice)
+    }
+    function add(id, id_product) {
+        let qty = $('#quantity'+id).val()
+        let price = Number($('#price'+id).text())
+        let days = Number($('#days'+id).text())
+        if(qty< Number($("#quantity"+id).attr('max'))){
+            qty++
+            updateTotal(price, +1,days)
+            $('#checkQty'+id).text(qty)
+            $('#subTotal'+id).text(numberToCurrency(qty*price*days))
+            $('#quantity'+id).val(qty)
+            detailTransaction[id_product] = qty
+            $('#productAmount').val(JSON.stringify(detailTransaction))
+        }
+        
+    }
+    function substract(id,id_product) {
+        let qty = $('#quantity'+id).val()
+        let price = Number($('#price'+id).text())
+        let days = Number($('#days'+id).text())
+        if (qty > 1) {
+            qty--
+            updateTotal(-price, -1, days)
+        }
+        $('#checkQty'+id).text(qty)
+        $('#subTotal'+id).text(numberToCurrency(qty*price*days))
+        $('#quantity'+id).val(qty)
+        detailTransaction[id_product] = qty
+        $('#productAmount').val(JSON.stringify(detailTransaction))
+    }
+</script>

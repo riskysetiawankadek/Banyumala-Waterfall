@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('./admin/head'); %>
+
+</head>
+
+<body>
+    <div class="fixed-top bg-transparent" style=" height: 100vh;
+    background-image: linear-gradient(to top, rgba(30, 0, 255, 0.2), rgba(52, 186, 235, 0.2)); z-index: 0"></div>
+    <div class="fixed-top bg-transparent" style=" height: 100vh;
+    background-image: linear-gradient(to left, rgba(0, 255, 166, 0.2), rgba(255, 52, 208, 0.2)); z-index: 0"></div>
+
+    <div class="d-flex my-auto justify-content-center align-items-center p-3 p-sm-0"
+        style="height: 100vh; background-image:url('images/bg_banyumala.webp'); background-size:cover; background-position:center">
+        <div class="card col-12 col-sm-6 col-md-5 m-3 p-3 rounded-lg">
+            <div class="d-flex flex-column justify-content-center m-3">
+                <img src="/images/brand.png" alt="AdminLTE Logo" class=" mx-auto img-circle"
+                    style=" width: 64px; filter:brightness(20%); opacity:0.8;">
+                <h4 class=" font-weight-bold mt-2 text-center text-dark" style="font-family: 'Dancing Script';">
+                    Banyumala
+                    Waterfall</h4>
+            </div>
+            <% if(messages.error) {%>
+                <div class="d-flex bg-white rounded-lg p-1 my-2 border border-danger" id="toast">
+                    <div class="my-auto text-danger text-bold">
+                        <%= messages.error %>
+                    </div>
+
+                    <button class="btn ml-auto" onclick="closeToast()"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            <% } %>
+                    <form action="/login" method="POST">
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" class="form-control" name="username" id="username"
+                                aria-describedby="helpId" placeholder="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">password</label>
+                            <input type="password" class="form-control" name="password" id="password"
+                                aria-describedby="helpId" placeholder="" required>
+                        </div>
+                        <div>
+                            <button type="submit" class="btn btn-dark w-100">Login</button>
+                        </div>
+                        <div class="d-flex justify-content-center my-3">
+                            <a name="" id="" class="w-50 h-100 text-center text-dark" href="/register"
+                                role="button">Register</a>
+                        </div>
+                    </form>
+
+        </div>
+    </div>
+    <script>
+        function closeToast() {
+            document.getElementById("toast").classList.remove('d-flex');
+            document.getElementById("toast").classList.add('d-none');
+        }
+    </script>
+</body>
+
+</html>
